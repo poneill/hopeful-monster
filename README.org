@@ -1,0 +1,2 @@
+
+* hopeful-monster will eventually be a library for evolutionary programming

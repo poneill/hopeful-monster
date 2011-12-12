@@ -67,9 +67,6 @@
 		       (equal (first (last (second pair))) type)) types)))
     (choose-randomly (mapcar #'first candidates))))
 
-(defun call-program ()
-  (list 'p (make-val)))
-
 (defun make-population (n)
   (loop for x from 1 to n
      collect (make-val)))

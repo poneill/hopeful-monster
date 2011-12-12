@@ -1,4 +1,4 @@
-(load "utils.cl")
+(LOAD "utils.cl")
 (load "tfbs.cl")
 ;(defparameter unary-funcs '(sqrt floor ceiling))
 ;; (defparameter list-constants '(t ()))
@@ -39,10 +39,15 @@
   (nth (random (length lst)) lst))
 
 (defun make-val ()
-  (eval (list (choose-randomly '(make-unary-func
-				 make-binary-func
-				 make-constant
-				 make-variable)))))
+  (eval (list (make-exp-of-type 'answer))))
+
+(defun make-exp-of-type (type)
+  (let* ((f (get-func-with-return-type type))
+	 (args (mapcar #'make-exp-of-type (arguments-of f)))
+	 (expr (append (list f) args)))
+    (if (member f (append constants variables))
+	(first expr)
+	expr)))
 
 (defun my-type-of (f)
   (lookup f types))

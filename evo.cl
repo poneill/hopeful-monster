@@ -1,22 +1,7 @@
 (LOAD "utils.cl")
 (load "tfbs.cl")
-;(defparameter unary-funcs '(sqrt floor ceiling))
-;; (defparameter list-constants '(t ()))
-;; (defparameter unary-list-funcs '(car cdr))
-;; (defparameter binary-list-funcs '(=))
-;; (defparameter ternary-list-funcs '(if))
-;; (defparameter list-variables '(xs))
-;; (defparameter binary-funcs '(+ - * / expt))
-;; (defparameter constants '(pi e 1 2 3 4 5))
-;; (defun f (x)
-;;   (+ (expt x 4) (expt x 3) (expt x 2) (expt x 1) 1))
-;; ;;(defparameter problems '(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))
-;; ;;(defparameter answers (mapcar #'f problems))
-;;(defparameter list-answers (mapcar #'reverse list-problems))
-(defparameter fitness-penalty 1000000)
 
-(defun clear-zeros (xs)
-  (mapcar (lambda (x) (if (= x 0) 1 x)) xs))
+(defparameter fitness-penalty 1000000)
   
 (defun compare-lists (xs ys);lower scores are better
   (max (sum (mapcar (lambda (x y) 

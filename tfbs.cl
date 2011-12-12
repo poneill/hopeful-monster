@@ -9,7 +9,7 @@
 (defparameter non-sites (loop for i from 0 below num-non-sites
 		       collect (random-site max-site-length)))
 
-(defparameter constants '(t nil))
+(defparameter constants '(t nil 0 1 2 3 4 5))
 (defparameter variables '(site))
 (defparameter nullary-funcs '(base))
 (defparameter unary-funcs '(not))
@@ -21,7 +21,8 @@
 		      (and (bool bool bool))
 		      (or (bool bool bool))
 		      (random-base (base))
-		      (query (site num base))))
+		      (query (site num base))
+		      (site (site))
 
 (defun random-base ()
   (choose-randomly delta))

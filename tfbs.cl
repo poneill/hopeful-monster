@@ -12,7 +12,7 @@
 (defparameter numeric-constants 
   (loop for i from 0 below max-site-length collect i))
 (defparameter constants (append '(t nil) numeric-constants delta))
-(defparameter variables '(site))
+(defparameter input 'site)
 (defparameter nullary-funcs '(base))
 (defparameter unary-funcs '(not))
 (defparameter binary-funcs '(and or))
@@ -27,7 +27,7 @@
 			      (equal (base base bool))
 			      (random-base (base))
 			      (query (num base))
-			      (variables (site))
+			      (get-input (site))
 			      (+ (num num num))
 			      (* (num num num))
 			      (- (num num num))
@@ -37,10 +37,13 @@
 (defun random-base ()
   (choose-randomly delta))
 
+(defun get-input ()
+  input)
+
 (defun query (pos)
   "indicate whether site has specified base at pos"
   (let ((pos-prime (min pos (length site))))
-    (string (char site pos-prime))))
+     (nth pos-prime site)))
 
 (defparameter unary-funcs '(not))
 (defparameter binary-funcs '(and or))

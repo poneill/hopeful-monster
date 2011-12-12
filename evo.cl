@@ -125,7 +125,7 @@
 	       (tournament-select population))
 	      (t (mutate (tournament-select population))))))
 
-(defun update-pop2 (population) 
+(defun update-pop (population) 
   (if elitism
       (cons (best population) (loop for i from 2 to (length population)
 				 collect (make-child population)))

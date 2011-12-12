@@ -14,12 +14,10 @@
 ;;(defparameter list-answers (mapcar #'reverse list-problems))
 (defparameter fitness-penalty 1000000)
 
+(defun problem-context (constants unary-funcs binary-funcs))
+
 (defun clear-zeros (xs)
   (mapcar (lambda (x) (if (= x 0) 1 x)) xs))
-
-(defun list-fitness (p)
-  (let ((responses (mapcar (lambda (x) (list-evaluate p x)) problems)))
-    (sum (mapcar (lambda (xy) (apply #'compare-lists xy)) (zip responses list-answers)))))
   
 (defun compare-lists (xs ys);lower scores are better
   (max (sum (mapcar (lambda (x y) 
@@ -47,60 +45,29 @@
 				 make-constant
 				 make-variable)))))
 
-(defun make-list-val ()
-    (eval (list (choose-randomly '(make-unary-list-func
-				   make-binary-list-func
-				   make-ternary-list-func
-				   make-list-constant
-				   make-list-constant
-				   make-list-constant
-				   make-list-variable
-				   call-program)))))
 (defun make-constant ()
   (choose-randomly constants))
 
-(defun make-list-constant ()
-  (choose-randomly list-constants))
-
-(defun make-list-variable ()
-  (choose-randomly list-variables))
-
 (defun make-variable ()
-  (choose-randomly list-variables))
+  (choose-randomly variables))
 
 (defun make-unary-func ()
   (let ((f (choose-randomly unary-funcs)))
     (list f (make-val))))
 
-(defun make-unary-list-func ()
-  (let ((f (choose-randomly unary-list-funcs)))
-    (list f (make-list-val))))
-
 (defun make-binary-func ()
   (let ((f (choose-randomly binary-funcs)))
     (list f (make-val) (make-val))))
 
-(defun make-binary-list-func ()
-  (let ((f (choose-randomly binary-list-funcs)))
-    (list f (make-list-val) (make-list-val))))
-
-(defun make-ternary-list-func ()
-  (let ((f (choose-randomly ternary-list-funcs)))
-    (list f (make-list-val) (make-list-val) (make-list-val))))
-
 (defun call-program ()
-  (list 'p (make-list-val)))
+  (list 'p (make-val)))
 
-(defun make-list-population (n)
+(defun make-population (n)
   (loop for x from 1 to n
-     collect (make-list-val)))
+     collect (make-val)))
 
 (defun bind-var (p sym val)
   `(let ((,sym ,val))
-     ,p))
-
-(defun list-bind-var (p sym val)
-  `(let ((,sym ',val))
      ,p))
 
 (defun bind-vars (p sym val &rest args)
@@ -116,13 +83,6 @@
   (handler-case
       (eval (bind-var p 'r r))
   (error (e) fitness-penalty)))
-
-(defun list-evaluate (p xs)
-  (handler-case
-      (eval (attach-recursive-definition
-	     p
-	     (list-bind-var p 'xs xs)))
-  (error (e) '())))
 
 (defun attach-recursive-definition (p bound-program)
   `(progn
@@ -202,11 +162,6 @@
 	(q (choose-randomly population)))
     (first (sort (list p q) #'< :key #'fitness))))
 
-(defun list-tournament-select (population)
-  (let ((p (choose-randomly population))
-	(q (choose-randomly population)))
-    (first (sort (list p q) #'< :key #'list-fitness))))
-
 (defun make-child (population)
   (let ((selector (random 1.0)))
 	(cond ((< selector crossover-prob)
@@ -224,11 +179,6 @@
       (loop for i from 1 to (length population)
 	 collect (make-child population))))
 
-(defun list-update-pop (population) 
-  (append (loop for i from (if elitism 1 2) to (length population)
-	     collect (make-child population))
-	  (if elitism (best population) nil)))
-
 (defun avg-fitness (population)
   (mean (mapcar #'floor (fitnesses population)))); take floor
 
@@ -239,9 +189,6 @@
 
 (defun fitnesses (population)
   (mapcar #'fitness population))
-
-(defun list-fitnesses (population)
-  (mapcar #'list-fitness population))
 
 (defun best-fitness (population)
   (fitness (best population)))

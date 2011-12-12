@@ -79,3 +79,11 @@
 
 (defun square (x)
   (* x x))
+
+(defun lookup (a tab)
+  (if tab
+      (let ((pair (first tab)))
+	(if (equal a (first pair))
+	    (second pair)
+	    (lookup a (rest tab))))
+      nil))

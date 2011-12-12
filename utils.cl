@@ -91,3 +91,11 @@
 	    (second pair)
 	    (lookup a (rest tab))))
       nil))
+
+(defun head (x)
+  "safely take the first element, returning self if not a list"
+  (if (listp x)
+      (first x)
+      x))
+
+(defun shush (x))

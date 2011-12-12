@@ -17,3 +17,9 @@
 
 (defun choose-randomly (lst)
   (nth (random (length lst)) lst))
+
+(defun string-to-list (str)
+  (mapcar #'string (loop for x being the elements of str collect x)));damn
+								     ;loop,
+								     ;you
+								     ;scary.

@@ -2,18 +2,6 @@
 (load "tfbs.cl")
 
 (defparameter fitness-penalty 1000000)
-  
-(defun compare-lists (xs ys);lower scores are better
-  (max (sum (mapcar (lambda (x y) 
-		      (if (= x y) 0 1)) 
-		    (zip xs ys)))
-       (length ys)))
-
-(defun choose-randomly (lst)
-  (nth (random (length lst)) lst))
-
-;(defun make-val ()
- ; (eval (list (make-exp-of-type answer-type))))
 
 (defun make-val ()
   (make-exp-of-type answer-type))

@@ -12,7 +12,7 @@
 (defparameter numeric-constants 
   (loop for i from 0 below max-site-length collect i))
 (defparameter constants (append '(t nil) numeric-constants delta))
-(defparameter input 'site)
+(defparameter variables (list 'input))
 (defparameter nullary-funcs '(base))
 (defparameter unary-funcs '(not))
 (defparameter binary-funcs '(and or))
@@ -26,8 +26,8 @@
 			      (or (bool bool bool))
 			      (equal (base base bool))
 			      (random-base (base))
-			      (query (num base))
-			      (get-input (site))
+			      (query (site num base))
+			      (input (site))
 			      (+ (num num num))
 			      (* (num num num))
 			      (- (num num num))
@@ -40,10 +40,10 @@
 (defun get-input ()
   input)
 
-(defun query (pos)
+(defun query (input pos)
   "indicate whether site has specified base at pos"
-  (let ((pos-prime (min pos (length site))))
-     (nth pos-prime site)))
+  (let ((pos-prime (min pos (length input))))
+     (nth pos-prime input)))
 
 (defparameter unary-funcs '(not))
 (defparameter binary-funcs '(and or))
@@ -56,9 +56,8 @@
 (defun fitness (p)
   (handler-case 
       (let* ((responses (mapcar (lambda (x) (evaluate p x)) problems))
-	     (fit (sum (zipwith #'/ (mapcar #'square
-					    (zipwith #'- responses answers)) 
-				(clear-zeros answers)))))
+	     (fit (sum (zipwith (lambda (x y) (if (equal x y) 1 0))
+				responses answers))))
 	(if (and (realp fit) (< fit fitness-penalty))
 	    fit
 	    fitness-penalty))

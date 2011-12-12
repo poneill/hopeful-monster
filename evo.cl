@@ -281,7 +281,7 @@
 (defun best-fitness (population)
   (fitness (best population)))
 
-(defun safe-mean (xs &optional (acc 0) (n 0))
+(defun safe-mean (xs &optional (acc 0) (n 0)); sometimes we need to compute very large means
   (if xs
       (let* ((x (car xs))
 	     (rest (cdr xs))

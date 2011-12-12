@@ -1,7 +1,7 @@
 ;; This file contains utility functions whose purpose should be clear
 ;; from their names.  Keeping them in the project code would just be a
 ;; distraction.
-(defvar delta '("A" "C" "G" "T"))
+(defparameter delta '("A" "C" "G" "T"))
 
 (defun read-file (file-name)
   (with-open-file (stream file-name)

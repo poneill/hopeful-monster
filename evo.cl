@@ -203,12 +203,6 @@
 (defparameter mutation-prob .01)
 (defparameter elitism t)
 
-(defun discrete-cmf (pmf &optional (acc 0))
-  "Return the cdf of a pmf"
-  (if pmf
-      (let ((acc-prime (+ (car pmf) acc)))
-	(cons acc-prime (discrete-cmf (cdr pmf) acc-prime)))))
-
 (defun select-by-fitness (population fits);pass fitnesses in as a parameter to avoid needless recomputation
   (let* ((cumfits (discrete-cmf (normalize (mapcar (lambda (x) (/ 1 x)) fits))))
 	 (x (random 1.0)))
@@ -224,9 +218,6 @@
   (let ((p (choose-randomly population))
 	(q (choose-randomly population)))
     (first (sort (list p q) #'< :key #'list-fitness))))
-
-(defun normalize (xs)
-  (mapcar (lambda (x)(/ x (sum xs))) xs))
 
 (defun make-child (population)
   (let ((selector (random 1.0)))
@@ -250,10 +241,6 @@
 	     collect (make-child population))
 	  (if elitism (best population) nil)))
 
-
-(defun mean (xs)
-  (/ (sum xs) (length xs)))
-
 (defun avg-fitness (population)
   (mean (mapcar #'floor (fitnesses population)))); take floor
 
@@ -271,15 +258,6 @@
 (defun best-fitness (population)
   (fitness (best population)))
 
-(defun safe-mean (xs &optional (acc 0) (n 0)); sometimes we need to compute very large means
-  (if xs
-      (let* ((x (car xs))
-	     (rest (cdr xs))
-	     (acc-prime (/ (+ (* acc n) x) (+ n 1))))
-	(print n)
-	(safe-mean rest acc-prime (+ n 1)))
-      acc))
-
 (defun iterate (population)
   (let ((round-winner (best population)))
     (if (= 0 (fitness round-winner))
@@ -291,29 +269,6 @@
 (defun best (population)
   (car (sort population #'< :key #'fitness)))
 
-(defun iterate-function (f n args)
-  (if (= n 1)
-      (funcall f args)
-      (iterate-function f (- n 1) (funcall f args))))
-				  
-(defun zipwith (f xs ys)
-  (if (or (null xs) (null ys))
-      ()
-      (cons (funcall f (car xs) (car ys))
-	    (zipwith f (cdr xs) (cdr ys)))))
-
-(defun depth (tree)
-  (if (atom tree)
-      0
-      (+ 1 (apply #'max (mapcar #'depth tree)))))
-
-(defun size (tree)
-  (if (atom tree)
-      1
-      (+ (length tree) (sum (mapcar #'depth tree)))))
-
-(defun variance (xs)
-  (- (mean (mapcar #'square xs)) (square (mean xs))))
 
 (defun complexity-stats (pop)
   (let ((fits (fitnesses pop))

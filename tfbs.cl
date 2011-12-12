@@ -9,31 +9,38 @@
 (defparameter non-sites (loop for i from 0 below num-non-sites
 		       collect (random-site max-site-length)))
 
-(defparameter constants '(t nil 0 1 2 3 4 5))
+(defparameter numeric-constants 
+  (loop for i from 0 below max-site-length collect i))
+(defparameter constants (append '(t nil) numeric-constants delta))
 (defparameter variables '(site))
 (defparameter nullary-funcs '(base))
 (defparameter unary-funcs '(not))
 (defparameter binary-funcs '(and or))
+(defparameter numeric-types (mapcar (lambda (i) (list i '(num))) 
+				    numeric-constants))
 
-(defparameter types '((t (bool))
-		      (nil (bool))
-		      (not (bool bool))
-		      (and (bool bool bool))
-		      (or (bool bool bool))
-		      (random-base (base))
-		      (query (site num base))
-		      (site (site))
-		      (0 (num))
-		      (1 (num))
-		      (+ (num num num))))
+(defparameter types (append '((t (bool))
+			      (nil (bool))
+			      (not (bool bool))
+			      (and (bool bool bool))
+			      (or (bool bool bool))
+			      (equal (base base bool))
+			      (random-base (base))
+			      (query (num base))
+			      (variables (site))
+			      (+ (num num num))
+			      (* (num num num))
+			      (- (num num num))
+			      )
+			    numeric-types))
 
 (defun random-base ()
   (choose-randomly delta))
 
-(defun query (site pos base)
+(defun query (pos)
   "indicate whether site has specified base at pos"
   (let ((pos-prime (min pos (length site))))
-    (equal (string (char site pos-prime)) base)))
+    (string (char site pos-prime))))
 
 (defparameter unary-funcs '(not))
 (defparameter binary-funcs '(and or))
@@ -41,4 +48,4 @@
 (defparameter problems (append sites non-sites))
 (defparameter answers (append (mapcar (lambda (x) 't) sites)
 			(mapcar #' (lambda (x) 'nil) non-sites)))
-
+(defparameter answer-type 'bool)

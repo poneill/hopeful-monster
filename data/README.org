@@ -1,0 +1,6 @@
+This file contains data for the transcription factor motif recognition
+problem.
+
+* Files
+
+- lexa_sites.txt :: 36 lexA binding sites taken from 30 E. coli promoter regions.

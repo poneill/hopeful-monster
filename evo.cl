@@ -44,6 +44,21 @@
 				 make-constant
 				 make-variable)))))
 
+(defun my-type-of (f)
+  (lookup f types))
+
+(defun return-type-of (f)
+  (first (last (lookup f types))))
+
+(defun arguments-of (f)
+  (reverse (rest (reverse (my-type-of f)))))
+
+(defun get-func-with-return-type (type)
+  (let ((candidates (remove-if-not 
+		     (lambda (pair) 
+		       (equal (first (last (second pair))) type)) types)))
+    (choose-randomly (mapcar #'first candidates))))
+
 (defun make-constant ()
   (choose-randomly constants))
 

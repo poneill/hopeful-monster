@@ -20,6 +20,7 @@
 		      (not (bool bool))
 		      (and (bool bool bool))
 		      (or (bool bool bool))
+		      (random-base (base))
 		      (query (site num base))))
 
 (defun random-base ()

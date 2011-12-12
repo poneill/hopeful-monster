@@ -9,15 +9,23 @@
 (defparameter non-sites (loop for i from 0 below num-non-sites
 		       collect (random-site max-site-length)))
 
+(defparameter constants '(t nil))
+(defparameter variables '(site))
+(defparameter nullary-funcs '(base))
 (defparameter unary-funcs '(not))
-(defparameter binary-funcs '(and or ))
+(defparameter binary-funcs '(and or))
+
+(defparameter types '((t (bool))
+		      (nil (bool))
+		      (not (bool bool))
+		      (and (bool bool bool))
+		      (or (bool bool bool))
+		      (query (site num base))))
+
+(defun random-base ()
+  (choose-randomly delta))
 
 (defun query (site pos base)
-  "indicate whether site has specified base at pos"
-  (let ((pos-prime (min pos (length site))))
-    (equal (string (char site pos-prime)) base)))
-
-(defun binary-query (pos base)
   "indicate whether site has specified base at pos"
   (let ((pos-prime (min pos (length site))))
     (equal (string (char site pos-prime)) base)))

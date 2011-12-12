@@ -1,3 +1,4 @@
+(load "utils.cl")
 (defvar unary-funcs '(sqrt floor ceiling))
 (defvar list-constants '(t ()))
 (defvar unary-list-funcs '(car cdr))
@@ -8,9 +9,9 @@
 (defvar constants '(pi e 1 2 3 4 5))
 (defun f (x)
   (+ (expt x 4) (expt x 3) (expt x 2) (expt x 1) 1))
-(defvar problems '(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))
-(defvar answers (mapcar #'f problems))
-(defvar list-answers (mapcar #'reverse list-problems))
+;;(defvar problems '(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))
+;;(defvar answers (mapcar #'f problems))
+;;(defvar list-answers (mapcar #'reverse list-problems))
 (defvar fitness-penalty 1000000)
 
 

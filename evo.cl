@@ -1,4 +1,5 @@
 (load "utils.cl")
+(load "tfbs.cl")
 ;(defparameter unary-funcs '(sqrt floor ceiling))
 ;; (defparameter list-constants '(t ()))
 ;; (defparameter unary-list-funcs '(car cdr))

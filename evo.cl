@@ -2,6 +2,10 @@
 (load "tfbs.cl")
 
 (defparameter fitness-penalty 1000000)
+(defparameter crossover-prob .9)
+(defparameter replicate-prob .09)
+(defparameter mutation-prob .01)
+(defparameter elitism t)
 
 (defun make-val ()
   (make-exp-of-type answer-type))
@@ -102,11 +106,6 @@
 					 (mutate (car (crossover p q)))))
 			   (loop for i from 1 to num-children collect i))))
     (append winners children)))
-
-(defparameter crossover-prob .9)
-(defparameter replicate-prob .09)
-(defparameter mutation-prob .01)
-(defparameter elitism t)
 
 (defun select-by-fitness (population fits);pass fitnesses in as a parameter to avoid needless recomputation
   (let* ((cumfits (discrete-cmf (normalize (mapcar (lambda (x) (/ 1 x)) fits))))

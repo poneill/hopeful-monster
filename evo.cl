@@ -15,8 +15,6 @@
 ;;(defparameter list-answers (mapcar #'reverse list-problems))
 (defparameter fitness-penalty 1000000)
 
-(defun problem-context (constants unary-funcs binary-funcs))
-
 (defun clear-zeros (xs)
   (mapcar (lambda (x) (if (= x 0) 1 x)) xs))
   

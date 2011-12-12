@@ -67,20 +67,6 @@
 		       (equal (first (last (second pair))) type)) types)))
     (choose-randomly (mapcar #'first candidates))))
 
-(defun make-constant ()
-  (choose-randomly constants))
-
-(defun make-variable ()
-  (choose-randomly variables))
-
-(defun make-unary-func ()
-  (let ((f (choose-randomly unary-funcs)))
-    (list f (make-val))))
-
-(defun make-binary-func ()
-  (let ((f (choose-randomly binary-funcs)))
-    (list f (make-val) (make-val))))
-
 (defun call-program ()
   (list 'p (make-val)))
 

@@ -52,3 +52,14 @@
 (defparameter answers (append (mapcar (lambda (x) 't) sites)
 			(mapcar #' (lambda (x) 'nil) non-sites)))
 (defparameter answer-type 'bool)
+
+(defun fitness (p)
+  (handler-case 
+      (let* ((responses (mapcar (lambda (x) (evaluate p x)) problems))
+	     (fit (sum (zipwith #'/ (mapcar #'square
+					    (zipwith #'- responses answers)) 
+				(clear-zeros answers)))))
+	(if (and (realp fit) (< fit fitness-penalty))
+	    fit
+	    fitness-penalty))
+    (error (e) fitness-penalty)))

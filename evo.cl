@@ -89,8 +89,11 @@
      collect (make-val)))
 
 (defun bind-var (p sym val)
-  `(let ((,sym ,val))
-     ,p))
+  (if (listp val)
+      `(let ((,sym (list ,@val)))
+	 ,p)
+      `(let ((,sym ,val))
+	 ,p)))
 
 (defun bind-vars (p sym val &rest args)
   (if (> (length args) 1)
@@ -101,9 +104,9 @@
 	(bind-vars p-prime sym-prime val-prime args-prime))
       (bind-var p sym val)))
   
-(defun evaluate (p r)
+(defun evaluate (p vars)
   (handler-case
-      (eval (bind-var p 'r r))
+      (eval (bind-var p 'input vars))
   (error (e) fitness-penalty)))
 
 (defun attach-recursive-definition (p bound-program)

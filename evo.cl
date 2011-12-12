@@ -54,14 +54,6 @@
       (eval (bind-var p 'input vars))
   (error (e) fitness-penalty)))
 
-(defun attach-recursive-definition (p bound-program)
-  `(progn
-     (defun p (xs)
-       (if (listp xs)
-       ,p
-       nil))
-     ,bound-program))
-
 (defun evaluate-problems (p)
   (mapcar (lambda (x) (evaluate p x))  problems))
 

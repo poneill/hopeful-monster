@@ -22,7 +22,7 @@
 		      (or (bool bool bool))
 		      (random-base (base))
 		      (query (site num base))
-		      (site (site))
+		      (site (site))))
 
 (defun random-base ()
   (choose-randomly delta))

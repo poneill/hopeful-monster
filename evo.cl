@@ -14,18 +14,6 @@
 ;;(defparameter list-answers (mapcar #'reverse list-problems))
 (defparameter fitness-penalty 1000000)
 
-
-
-(defun sum (xs)
-  (apply #'+ xs))
-(defun fib (n)
-  (if (< n 2)
-      n
-      (+ (fib (- n 1)) (fib (- n 2)))))
-
-(defun square (x)
-  (* x x))
-
 (defun clear-zeros (xs)
   (mapcar (lambda (x) (if (= x 0) 1 x)) xs))
 

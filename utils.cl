@@ -68,3 +68,14 @@
 
 (defun variance (xs)
   (- (mean (mapcar #'square xs)) (square (mean xs))))
+
+(defun sum (xs)
+  (apply #'+ xs))
+
+(defun fib (n)
+  (if (< n 2)
+      n
+      (+ (fib (- n 1)) (fib (- n 2)))))
+
+(defun square (x)
+  (* x x))

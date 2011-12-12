@@ -57,11 +57,6 @@
 (defun evaluate-problems (p)
   (mapcar (lambda (x) (evaluate p x))  problems))
 
-(defun zip (xs ys)
-  (if (or (null xs) (null ys))
-      nil
-      (cons (list (car xs) (car ys)) (zip (cdr xs) (cdr ys)))))
-
 (defun descend (tree &optional (path nil))
   (if (atom tree) 
       (list tree path)

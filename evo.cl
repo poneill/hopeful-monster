@@ -79,9 +79,11 @@
 	`(,@pre ,(stitch new-tree leaf new-path) ,@post))
       leaf))
 
-(defun crossover (p q)
-  "accept two programs, p and q, and return crossed-over mutants"
-  (let* ((p-leaf-path (descend p))
+(defun crossover (population)
+  "accepts a population and returns crossed-over mutants"
+  (let* ((p (tournament-select population))
+	 (q (tournament-select population))
+	 (p-leaf-path (descend p))
 	 (q-leaf-path (descend q))
 	 (p-leaf (first p-leaf-path))
 	 (q-leaf (first q-leaf-path))
@@ -94,7 +96,7 @@
 	  (print q-type)
 	  (list (stitch p q-leaf p-path)
 		(stitch q p-leaf q-path)))
-	(list p q))))
+	(crossover population))))
 
 (defun mutate (p)
   (let ((path (second (descend p))))
@@ -118,9 +120,7 @@
 (defun make-child (population)
   (let ((selector (random 1.0)))
 	(cond ((< selector crossover-prob)
-	       (let ((program1 (tournament-select population))
-		     (program2 (tournament-select population)))
-		 (car (crossover program1 program2))))
+	       (car (crossover population)))
 	      ((< selector (+ crossover-prob replicate-prob))
 	       (tournament-select population))
 	      (t (mutate (tournament-select population))))))

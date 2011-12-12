@@ -15,12 +15,6 @@
   (+ (expt x 4) (expt x 3) (expt x 2) (expt x 1) 1))
 (defvar problems '(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))
 (defvar answers (mapcar #'f problems))
-(defvar list-problems (list () 
-			    (list 1) 
-			    (list 1 2)
-			    (list 1 2 3)
-			    (list 1 2 3 4)
-			    (list 1 2 3 4 5)))
 (defvar list-answers (mapcar #'reverse list-problems))
 (defvar fitness-penalty 1000000)
 

@@ -20,6 +20,6 @@
 (defparameter binary-funcs '(and or))
 
 (defparameter problems (append sites non-sites))
-(defparameter answers (append (mapcar #' lambda () 't sites)
-			(mapcar #' lambda () 'nil non-sites)))
+(defparameter answers (append (mapcar (lambda (x) 't) sites)
+			(mapcar #' (lambda (x) 'nil) non-sites)))
 

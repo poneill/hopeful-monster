@@ -22,7 +22,7 @@
 			    (list 1 2 3 4)
 			    (list 1 2 3 4 5)))
 (defvar list-answers (mapcar #'reverse list-problems))
-(defvar bignum 1000000)
+(defvar fitness-penalty 1000000)
 
 
 
@@ -55,10 +55,10 @@
 	     (fit (sum (zipwith #'/ (mapcar #'square
 					    (zipwith #'- responses answers)) 
 				(clear-zeros answers)))))
-	(if (and (realp fit) (< fit bignum))
+	(if (and (realp fit) (< fit fitness-penalty))
 	    fit
-	    bignum))
-    (error (e) bignum)))
+	    fitness-penalty))
+    (error (e) fitness-penalty)))
 
 (defun choose-randomly (lst)
   (nth (random (length lst)) lst))
@@ -137,7 +137,7 @@
 (defun evaluate (p r)
   (handler-case
       (eval (bind-var p 'r r))
-  (error (e) bignum)))
+  (error (e) fitness-penalty)))
 
 (defun list-evaluate (p xs)
   (handler-case

@@ -38,8 +38,11 @@
 (defun choose-randomly (lst)
   (nth (random (length lst)) lst))
 
+;(defun make-val ()
+ ; (eval (list (make-exp-of-type answer-type))))
+
 (defun make-val ()
-  (eval (list (make-exp-of-type 'answer))))
+  (make-exp-of-type answer-type))
 
 (defun make-exp-of-type (type)
   (let* ((f (get-func-with-return-type type))

@@ -25,7 +25,6 @@
 			      (and (bool bool bool))
 			      (or (bool bool bool))
 			      (equal (base base bool))
-			      (random-base (base))
 			      (query (site num base))
 			      (input (site))
 			      (+ (num num num))
@@ -34,16 +33,13 @@
 			      )
 			    numeric-types))
 
-(defun random-base ()
-  (choose-randomly delta))
-
 (defun get-input ()
   input)
 
 (defun query (input pos)
   "indicate whether site has specified base at pos"
-  (let ((pos-prime (min pos (length input))))
-     (nth pos-prime input)))
+  (let ((pos-prime (max 0 (min pos (length input)))))
+    (nth pos-prime input)))
 
 (defparameter unary-funcs '(not))
 (defparameter binary-funcs '(and or))

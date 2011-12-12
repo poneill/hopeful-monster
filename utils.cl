@@ -49,7 +49,11 @@
   (if (= n 1)
       (funcall f args)
       (iterate-function f (- n 1) (funcall f args))))
-				  
+
+(defun zip (xs ys)
+  (if (or (null xs) (null ys))
+      nil
+      (cons (list (car xs) (car ys)) (zip (cdr xs) (cdr ys)))))				  
 (defun zipwith (f xs ys)
   (if (or (null xs) (null ys))
       ()

@@ -58,7 +58,7 @@
   (handler-case
       (eval 
        (bind-var p 'input vars))
-  (error (e) fitness-penalty)))
+  (error () fitness-penalty)))
 
 (defun evaluate-problems (p)
   (mapcar (lambda (x) (evaluate p x))  problems))

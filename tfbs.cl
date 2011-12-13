@@ -1,6 +1,7 @@
 ; This file contains functions specific to the transcription factor
 ; binding site search problem.
 (load "utils.cl")
+
 (defparameter non-site-proportion 1); proportion of non-sites to sites
 (defparameter sites (mapcar #'string-to-list (read-file "~/hopeful-monster/data/lexa_sites.txt")))
 (defparameter num-sites (length sites))
@@ -30,11 +31,20 @@
 			      (+ (num num num))
 			      (* (num num num))
 			      (- (num num num))
+			      (A (base))
+			      (C (base))
+			      (G (base))
+			      (Th (base))
 			      )
 			    numeric-types))
 
 (defun get-input ()
   input)
+
+(defun A () "A")
+(defun C () "C")
+(defun G () "G")
+(defun Th () "T")
 
 (defun query (input pos)
   "indicate whether site has specified base at pos"
@@ -45,11 +55,12 @@
 (defparameter binary-funcs '(and or))
 
 (defparameter problems (append sites non-sites))
-(defparameter answers (append (mapcar (lambda (x) 't) sites)
-			(mapcar #' (lambda (x) 'nil) non-sites)))
+(defparameter answers (append (mapcar (lambda () 't) sites)
+			(mapcar #' (lambda () 'nil) non-sites)))
 (defparameter answer-type 'bool)
 
 (defun fitness (p)
+  (print "calling fitness")
   (handler-case 
       (let* ((responses (mapcar (lambda (x) (evaluate p x)) problems))
 	     (fit (sum (zipwith (lambda (x y) (if (equal x y) 1 0))

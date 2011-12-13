@@ -1,4 +1,4 @@
-(LOAD "utils.cl")
+(load "utils.cl")
 (load "tfbs.cl")
 
 (defparameter fitness-penalty 1000000)
@@ -40,6 +40,7 @@
 (defun bind-var (p sym val)
   (if (listp val)
       `(let ((,sym (list ,@val)))
+	 ,sym
 	 ,p)
       `(let ((,sym ,val))
 	 ,p)))
@@ -55,7 +56,8 @@
   
 (defun evaluate (p vars)
   (handler-case
-      (eval (bind-var p 'input vars))
+      (eval 
+       (bind-var p 'input vars))
   (error (e) fitness-penalty)))
 
 (defun evaluate-problems (p)
@@ -92,16 +94,20 @@
     (if (equal p-type q-type)
 	(let ((p-path (second p-leaf-path))
 	      (q-path (second q-leaf-path)))
-	  (print p-type)
-	  (print q-type)
 	  (list (stitch p q-leaf p-path)
 		(stitch q p-leaf q-path)))
 	(crossover population))))
 
 (defun mutate (p)
-  (let ((path (second (descend p))))
-    (stitch p (make-val) path)))
-
+  (let* ((descent (descend p))
+	 (leaf (second descent))
+	 (path (second descent))
+	 (mutant (make-val)))
+    (if (equal (return-type-of (head leaf))
+	       (return-type-of (head mutant)))
+	(stitch p mutant path)
+	(mutate p))))
+  
 (defun pick-winners (population)
   (let ((sorted-pop (sort population #'< :key #'fitness)))
     (subseq sorted-pop 0 (/ (length sorted-pop) 2))))
@@ -119,16 +125,16 @@
 
 (defun make-child (population)
   (let ((selector (random 1.0)))
-	(cond ((< selector crossover-prob)
-	       (car (crossover population)))
-	      ((< selector (+ crossover-prob replicate-prob))
-	       (tournament-select population))
-	      (t (mutate (tournament-select population))))))
+    (cond ((< selector crossover-prob)
+	   (car (crossover population)))
+	  ((< selector (+ crossover-prob replicate-prob))
+	   (tournament-select population))
+	  (t (mutate (tournament-select population))))))
 
 (defun update-pop (population) 
   (if elitism
-      (cons (best population) (loop for i from 2 to (length population)
-				 collect (make-child population)))
+	(cons (best population) (loop for i from 2 to (length population)
+				   collect (make-child population)))
       (loop for i from 1 to (length population)
 	 collect (make-child population))))
 
@@ -151,18 +157,21 @@
     (if (= 0 (fitness round-winner))
       round-winner
       (progn
-	(print (avg-fitness population))
+	(print (complexity-stats population))
 	(iterate (update-pop population))))))
 
 (defun best (population)
-  (car (sort population #'< :key #'fitness)))
+  (let ((winner (argmin population #'fitness)))
+    (print (fitness winner))
+    winner))
 
 
 (defun complexity-stats (pop)
   (let ((fits (fitnesses pop))
 	(depths (mapcar #'depth pop))
 	(sizes (mapcar #'size pop)))
-    (mapcar #'float (list (apply #'min fits) 
+    (mapcar #'float (list (length fits)
+			  (apply #'min fits) 
 			  (mean fits)
 			  (variance fits)
 			  (mean depths) 

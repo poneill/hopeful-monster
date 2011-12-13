@@ -118,3 +118,12 @@
 	(append (qsort (remove-if (lambda (y) (> y x)) rests)) 
 		(list x)
 		(qsort (remove-if (lambda (y) (<= y x)) rests))))))
+
+(defun argmin (xs f &optional (curr nil) (fcurr nil))
+  (cond ((null xs) curr)
+	((null fcurr) (argmin (rest xs) f (first xs) (funcall f (first xs))))
+	(t (let* ((x (first xs))
+		  (fx (funcall f x)))
+	     (if (< fx fcurr)
+		 (argmin (rest xs) f x    fx)
+		 (argmin (rest xs) f curr fcurr))))))

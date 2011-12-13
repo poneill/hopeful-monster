@@ -98,4 +98,23 @@
       (first x)
       x))
 
-(defun shush (x))
+(defun shush (x)
+  "Suppress output"
+)
+
+(defun separate (f xs &optional (sheep nil) (goats nil))
+  (if (null xs) 
+      (list sheep goats)
+      (let ((x (first xs)))
+	(if (funcall f x)
+	    (separate f (rest xs) (cons x sheep) goats)
+	    (separate f (rest xs) sheep (cons x goats))))))
+      
+(defun qsort (xs)
+  (if (< (length xs) 2)
+      xs
+      (let ((x (first xs))
+	    (rests (rest xs)))
+	(append (qsort (remove-if (lambda (y) (> y x)) rests)) 
+		(list x)
+		(qsort (remove-if (lambda (y) (<= y x)) rests))))))

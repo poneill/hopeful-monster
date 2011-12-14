@@ -1,3 +1,7 @@
+(defpackage :evo 
+  (:use common-lisp))
+(in-package :evo)
+
 (load "utils.cl")
 (load "tfbs.cl")
 

@@ -149,8 +149,8 @@
   (if elitism
 	(cons (best population) (loop for i from 2 to (length population)
 				   collect (make-child population)))
-      (loop for i from 1 to (length population)
-	 collect (make-child population))))
+      (complexity-stats (loop for i from 1 to (length population)
+	 collect (make-child population)))))
 
 (defun avg-fitness (population)
   (mean (mapcar #'floor (fitnesses population)))); take floor
@@ -181,7 +181,7 @@
 
 
 (defun complexity-stats (pop)
-  (let ((fits (fitnesses pop))
+  (let* ((fits (fitnesses pop))
 	(depths (mapcar #'depth pop))
 	(sizes (mapcar #'size pop))
 	(stats (mapcar #'float (list (length fits)

@@ -107,10 +107,6 @@
 	       (return-type-of (head mutant)))
 	(stitch p mutant path)
 	(mutate p))))
-  
-(defun pick-winners (population)
-  (let ((sorted-pop (sort population #'< :key #'fitness)))
-    (subseq sorted-pop 0 (/ (length sorted-pop) 2))))
 
 (defun select-by-fitness (population fits);pass fitnesses in as a parameter to avoid needless recomputation
   (let* ((cumfits (discrete-cmf (normalize (mapcar (lambda (x) (/ 1 x)) fits))))

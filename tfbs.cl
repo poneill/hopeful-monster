@@ -61,7 +61,6 @@
 (defparameter answer-type 'bool)
 
 (defun fitness (p)
-  (print "calling fitness")
   (handler-case 
       (let* ((responses (mapcar (lambda (x) (evaluate p x)) problems))
 	     (fit (sum (zipwith (lambda (x y) (if (equal x y) 0 1))

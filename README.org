@@ -1,2 +1,2 @@
 
-* hopeful-monster will eventually be a library for evolutionary programming
+* hopeful-monster is a library for strongly typed evolutionary programming

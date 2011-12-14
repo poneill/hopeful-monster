@@ -108,12 +108,6 @@
 	(stitch p mutant path)
 	(mutate p))))
 
-(defun select-by-fitness (population fits);pass fitnesses in as a parameter to avoid needless recomputation
-  (let* ((cumfits (discrete-cmf (normalize (mapcar (lambda (x) (/ 1 x)) fits))))
-	 (x (random 1.0)))
-    (caar (remove-if-not (lambda (pair) (>= (second pair) x)) 
-			(mapcar #'list population cumfits)))))
-
 (defun tournament-select (population)
   (let ((p (choose-randomly population))
 	(q (choose-randomly population)))

@@ -155,7 +155,6 @@
     (print (fitness winner))
     winner))
 
-
 (defun complexity-stats (pop)
   (let ((fits (fitnesses pop))
 	(depths (mapcar #'depth pop))

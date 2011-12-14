@@ -55,17 +55,18 @@
 (defparameter binary-funcs '(and or))
 
 (defparameter problems (append sites non-sites))
-(defparameter answers (append (mapcar (lambda (x) 't) sites)
-			(mapcar #' (lambda (x) 'nil) non-sites)))
+(defparameter answers 
+  (append (loop for i from 1 to (length sites)     collect t)
+	  (loop for i from 1 to (length non-sites) collect nil)))
 (defparameter answer-type 'bool)
 
 (defun fitness (p)
   (print "calling fitness")
   (handler-case 
       (let* ((responses (mapcar (lambda (x) (evaluate p x)) problems))
-	     (fit (sum (zipwith (lambda (x y) (if (equal x y) 1 0))
+	     (fit (sum (zipwith (lambda (x y) (if (equal x y) 0 1))
 				responses answers))))
 	(if (and (realp fit) (< fit fitness-penalty))
 	    fit
 	    fitness-penalty))
-    (error (e) fitness-penalty)))
+    (error () fitness-penalty)))

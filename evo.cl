@@ -7,7 +7,22 @@
 (defparameter mutation-prob .01)
 (defparameter elitism t)
 
-(defun make-val ()
+(defun get-fitness (p)
+  "select fitness from p"
+  (if (= (length p) 2)
+      (second p)
+      (error "called get-fitness with wrong args")))
+
+(defun get-program (p)
+  "select program from p"
+  (if (= (length p) 2)
+      (first p)
+      (error "called get-program with wrong args")))
+
+(defun attach-fitness (p)
+  (list p (fitness p)))
+
+(defun make-program ()
   (make-exp-of-type answer-type))
 
 (defun make-exp-of-type (type)
@@ -35,7 +50,7 @@
 
 (defun make-population (n)
   (loop for x from 1 to n
-     collect (make-val)))
+     collect (attach-fitness (make-program))))
 
 (defun bind-var (p sym val)
   (if (listp val)
@@ -92,17 +107,25 @@
 	 (p-type (return-type-of (head p-leaf)))
 	 (q-type (return-type-of (head q-leaf))))
     (if (equal p-type q-type)
-	(let ((p-path (second p-leaf-path))
-	      (q-path (second q-leaf-path)))
-	  (list (stitch p q-leaf p-path)
-		(stitch q p-leaf q-path)))
+	(let* ((p-path (second p-leaf-path))
+	      (q-path (second q-leaf-path))
+	      (p-prime (stitch p q-leaf p-path)))
+	  (list p-prime
+		(stitch q p-leaf q-path))) ;currently we throw this
+					   ;value away, so why bother
+					   ;evaluating fitness?
+					   ;Ultimately we need to make
+					   ;a decision about this: use
+					   ;the second crossover
+					   ;offspring, or stop
+					   ;computing them
 	(crossover population))))
 
 (defun mutate (p)
   (let* ((descent (descend p))
 	 (leaf (second descent))
 	 (path (second descent))
-	 (mutant (make-val)))
+	 (mutant (make-program)))
     (if (equal (return-type-of (head leaf))
 	       (return-type-of (head mutant)))
 	(stitch p mutant path)
@@ -111,22 +134,23 @@
 (defun tournament-select (population)
   (let ((p (choose-randomly population))
 	(q (choose-randomly population)))
-    (first (sort (list p q) #'< :key #'fitness))))
+    (get-program (first (sort (list p q) #'< :key #'get-fitness)))))
 
 (defun make-child (population)
-  (let ((selector (random 1.0)))
-    (cond ((< selector crossover-prob)
-	   (car (crossover population)))
-	  ((< selector (+ crossover-prob replicate-prob))
-	   (tournament-select population))
-	  (t (mutate (tournament-select population))))))
+  (let* ((selector (random 1.0))
+	 (p (cond ((< selector crossover-prob)
+		   (car (crossover population)))
+		  ((< selector (+ crossover-prob replicate-prob))
+		   (tournament-select population))
+		  (t (mutate (tournament-select population))))))
+    (attach-fitness p)))
 
 (defun update-pop (population) 
   (if elitism
 	(cons (best population) (loop for i from 2 to (length population)
 				   collect (make-child population)))
-      (loop for i from 1 to (length population)
-	 collect (make-child population))))
+      (complexity-stats (loop for i from 1 to (length population)
+	 collect (make-child population)))))
 
 (defun avg-fitness (population)
   (mean (mapcar #'floor (fitnesses population)))); take floor
@@ -137,7 +161,7 @@
 	    (list (reduce #'min fits) (mean fits)))))
 
 (defun fitnesses (population)
-  (mapcar #'fitness population))
+  (mapcar #'get-fitness population))
 
 (defun best-fitness (population)
   (fitness (best population)))
@@ -151,22 +175,24 @@
 	(iterate (update-pop population))))))
 
 (defun best (population)
-  (let ((winner (argmin population #'fitness)))
-    (print (fitness winner))
+  (let ((winner (argmin population #'get-fitness)))
+    (print (get-fitness winner))
     winner))
 
 (defun complexity-stats (pop)
-  (let ((fits (fitnesses pop))
+  (let* ((fits (fitnesses pop))
 	(depths (mapcar #'depth pop))
-	(sizes (mapcar #'size pop)))
-    (mapcar #'float (list (length fits)
-			  (apply #'min fits) 
-			  (mean fits)
-			  (variance fits)
-			  (mean depths) 
-			  (variance depths)
-			  (mean sizes)
-			  (variance sizes)))))
+	(sizes (mapcar #'size pop))
+	(stats (mapcar #'float (list (length fits)
+				     (apply #'min fits) 
+				     (mean fits)
+				     (variance fits)
+				     (mean depths) 
+				     (variance depths)
+				     (mean sizes)
+				     (variance sizes)))))
+    (print stats)
+    pop))
 
 (defun display-pop-fits (pop)
   (sort (mapcar #'float (fitnesses pop)) #'<))

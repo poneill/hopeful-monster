@@ -3,7 +3,7 @@
 (load "utils.lisp")
 
 (defparameter non-site-proportion 1); proportion of non-sites to sites
-(defparameter sites (mapcar #'string-to-list (read-file "~/hopeful-monster/data/lexa_sites.txt")))
+(defparameter sites (mapcar #'string-to-list (read-file #p"data/lexa_sites.txt")))
 (defparameter num-sites (length sites))
 (defparameter max-site-length (apply #'max (mapcar #'length sites)))
 (defparameter num-non-sites (* num-sites non-site-proportion))

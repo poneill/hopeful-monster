@@ -1,11 +1,12 @@
-(load "utils.cl")
-(load "tfbs.cl")
+(load "utils.lisp")
+(load "tfbs.lisp")
 
 (defparameter fitness-penalty 1000000)
 (defparameter crossover-prob .9)
 (defparameter replicate-prob .09)
 (defparameter mutation-prob .01)
 (defparameter elitism t)
+(defparameter tournament-selector 4)
 
 (defun get-fitness (p)
   "select fitness from p"
@@ -132,9 +133,9 @@
 	(mutate p))))
 
 (defun tournament-select (population)
-  (let ((p (choose-randomly population))
-	(q (choose-randomly population)))
-    (get-program (first (sort (list p q) #'< :key #'get-fitness)))))
+  (let ((candidates (loop for i from 1 to tournament-selector 
+		       collect (choose-randomly population))))
+    (get-program (first (sort candidates #'< :key #'get-fitness)))))
 
 (defun make-child (population)
   (let* ((selector (random 1.0))

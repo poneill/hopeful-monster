@@ -164,6 +164,9 @@
 (defun fitnesses (population)
   (mapcar #'get-fitness population))
 
+(defun best-program (population)
+  (get-program (best population)))
+
 (defun best-fitness (population)
   (get-fitness (best population)))
 

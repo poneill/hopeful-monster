@@ -165,7 +165,7 @@
   (mapcar #'get-fitness population))
 
 (defun best-fitness (population)
-  (fitness (best population)))
+  (get-fitness (best population)))
 
 (defun iterate (population)
   (let ((round-winner (best population)))

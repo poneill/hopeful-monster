@@ -127,3 +127,48 @@
 	     (if (< fx fcurr)
 		 (argmin (rest xs) f x    fx)
 		 (argmin (rest xs) f curr fcurr))))))
+
+(defun tee (f xs)
+  (let ((out (apply f xs)))
+    (print out)
+    xs))
+
+(defun prune (p)
+  (if (atom p)
+      p
+      (let ((operator (first p))
+	    (operands (mapcar #'prune (rest p))))
+	(cond ((equal operator 'and) 
+	       (cond ((some #'null operands) nil)
+		     (t (let ((operands-prime 
+			       (unique (remove-if #'true operands))))
+			  (cond ((= (length operands-prime) 0) t)
+				((= (length operands-prime) 1) (first operands-prime))
+				(t (cons 'and operands-prime)))))))
+	      ((equal operator 'or) 
+	       (cond ((some #'true operands) t)
+		     (t (let ((operands-prime (unique (remove-if #'null operands))))
+			  (cond ((= (length operands-prime) 0) nil)
+				((= (length operands-prime) 1) (first operands-prime))
+				(t (cons 'or operands-prime)))))))
+	      ((equal operator 'not)
+	       (let ((operand (first operands)))
+		 (cond ((equal operand 'nil) t)
+		       ((equal operand t) nil)
+		       ((equal (first operand) 'not) (second operand))
+		       (t (cons 'not operands)))))
+	      (t p)))))
+
+(defun true (x) 
+  (equal t x))
+
+(defun fold (f x xs)
+  (if (null xs)
+      x
+      (fold f (funcall f x (first xs)) (rest xs))))
+
+(defun fold1 (f xs)
+  (fold f (first xs) (rest xs)))
+
+(defun unique (ys)
+  (reverse (fold (lambda (xs x) (if (member x xs) xs (cons x xs))) '() ys)))

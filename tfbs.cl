@@ -51,9 +51,6 @@
   (let ((pos-prime (max 0 (min pos (length input)))))
     (nth pos-prime input)))
 
-(defparameter unary-funcs '(not))
-(defparameter binary-funcs '(and or))
-
 (defparameter problems (append sites non-sites))
 (defparameter answers 
   (append (loop for i from 1 to (length sites)     collect t)
@@ -69,3 +66,4 @@
 	    fit
 	    fitness-penalty))
     (error () fitness-penalty)))
+

@@ -1,6 +1,6 @@
 ; This file contains functions specific to the transcription factor
 ; binding site search problem.
-(load "utils.cl")
+(load "utils.lisp")
 
 (defparameter non-site-proportion 1); proportion of non-sites to sites
 (defparameter sites (mapcar #'string-to-list (read-file "~/hopeful-monster/data/lexa_sites.txt")))
